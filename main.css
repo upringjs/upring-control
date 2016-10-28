@@ -4,3 +4,14 @@ svg {
   margin-right: auto;
   display: block;
 }
+
+#tooltip {
+  position: absolute;
+  text-align: center;
+  padding: 20px;
+  font: 12px sans-serif;
+  background: #F1F1F1;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+}

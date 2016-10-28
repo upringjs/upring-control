@@ -17,7 +17,9 @@ var paletteCounter = 0
 const idColors = new Map()
 
 const parent = yo`
-  <div class=${style} id="wheel">
+  <div class=${style} id='wheel'>
+    <div id='tooltip'>
+    </div>
   </div>
 `
 
@@ -28,6 +30,8 @@ const svg = d3.select('div#wheel').append('svg')
   .attr('height', height)
   .append('g')
   .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
+
+var div = d3.select('div#tooltip').style('opacity', 0)
 
 const pie = d3.pie()
   .value(function (d) {
@@ -96,6 +100,14 @@ function arcMouseOver (ev) {
     .attr('fill', () => '#333333')
     .style('opacity', 0.2)
 
+  div.transition()
+    .duration(200)
+    .style('opacity', 0.9)
+
+  div.html(`<b>id:</b>${id}<br/>`)
+    .style('left', (d3.event.pageX) + 'px')
+    .style('top', (d3.event.pageY - 28) + 'px')
+
   lastId = id
 }
 
@@ -104,6 +116,10 @@ function arcMouseLeave (ev) {
     .transition('restore')
     .attr('fill', fill)
     .style('opacity', 1)
+
+  div.transition()
+    .duration(200)
+    .style('opacity', 0)
 
   lastId = ''
 }
