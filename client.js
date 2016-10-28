@@ -2,16 +2,28 @@
 /* global WebSocket */
 
 const d3 = require('d3')
+const sheetify = require('sheetify')
+const yo = require('yo-yo')
+
+sheetify('normalize.css')
+const style = sheetify('./main.css')
 
 const width = 960
 const height = 500
 const radius = Math.min(width, height) / 2
 
-const palette = d3.schemeCategory20c
+const palette = d3.schemeCategory20b
 var paletteCounter = 0
 const idColors = new Map()
 
-const svg = d3.select('body').append('svg')
+const parent = yo`
+  <div class=${style} id="wheel">
+  </div>
+`
+
+document.body.appendChild(parent)
+
+const svg = d3.select('div#wheel').append('svg')
   .attr('width', width)
   .attr('height', height)
   .append('g')
