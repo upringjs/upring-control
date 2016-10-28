@@ -4,6 +4,7 @@ const browserify = require('browserify')
 const bankai = require('bankai')
 const http = require('http')
 const path = require('path')
+const WebSocketServer = require('ws').Server
 const client = path.join(__dirname, 'client.js')
 
 function build (upring) {
@@ -23,7 +24,7 @@ function build (upring) {
     }
   })
 
-  return http.createServer((req, res) => {
+  const server = http.createServer((req, res) => {
     switch (req.url) {
       case '/': return html(req, res).pipe(res)
       case '/whoami': return ready(res) && whoami(req, res)
@@ -36,6 +37,29 @@ function build (upring) {
         return res.end('404 not found')
     }
   })
+
+  const wss = new WebSocketServer({ server: server })
+  const connections = new Set()
+
+  wss.on('connection', function connection (ws) {
+    connections.add(ws)
+    ws.on('close', function () {
+      connections.delete(ws)
+    })
+    ws.send(JSON.stringify(computeRing()))
+  })
+
+  upring.on('peerUp', sendRing)
+  upring.on('peerDown', sendRing)
+
+  function sendRing () {
+    const ring = computeRing()
+    connections.forEach(function (conn) {
+      conn.send(JSON.stringify(ring))
+    })
+  }
+
+  return server
 
   function ready (res) {
     if (!_ready) {
@@ -56,13 +80,16 @@ function build (upring) {
   }
 
   function ring (req, res) {
-    const entries = upring._hashring._entries.map(function (entry) {
+    res.end(JSON.stringify(computeRing(), null, 2))
+  }
+
+  function computeRing () {
+    return upring._hashring._entries.map(function (entry) {
       return {
         id: entry.peer.id,
         point: entry.point
       }
     })
-    res.end(JSON.stringify(entries, null, 2))
   }
 }
 

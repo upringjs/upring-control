@@ -1,7 +1,7 @@
 'use strict'
 
 const d3 = require('d3')
-const xhr = require('xhr')
+const WebSocket = require('ws')
 
 const width = 960
 const height = 500
@@ -23,25 +23,9 @@ const pie = d3.pie()
   })
   .sort(null)
 
-xhr.get('/ring', { json: true }, function (err, res) {
-  if (err) {
-    console.log(err)
-    return
-  }
-
-  const arc = d3.arc()
-    .innerRadius(radius - 100)
-    .outerRadius(radius - 20)
-
-  svg.datum(res.body).selectAll('path')
-    .data(pie)
-    .enter().append('path')
-    .attr('fill', fill)
-    .attr('d', arc)
-    .each(function (d) {
-      this._current = d
-    })
-})
+const arc = d3.arc()
+  .innerRadius(radius - 100)
+  .outerRadius(radius - 20)
 
 function fill (d, i) {
   const name = d.data.id
@@ -58,3 +42,28 @@ function fill (d, i) {
   return color
 }
 
+const conn = new WebSocket(document.URL.replace('http', 'ws'))
+var path
+
+conn.onmessage = function (msg) {
+  const data = JSON.parse(msg.data)
+
+  // TODO add a transition
+  if (path) {
+    path.remove()
+  }
+
+  path = getPath(data)
+}
+
+function getPath (data) {
+  return svg.datum(data).selectAll('path')
+    .data(pie)
+    .enter()
+    .append('path')
+    .attr('fill', fill)
+    .attr('d', arc)
+    .each(function (d) {
+      this._current = d
+    })
+}
