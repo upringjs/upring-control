@@ -1,7 +1,7 @@
 'use strict'
+/* global WebSocket */
 
 const d3 = require('d3')
-const WebSocket = require('ws')
 
 const width = 960
 const height = 500
