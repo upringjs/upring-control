@@ -63,7 +63,35 @@ function getPath (data) {
     .append('path')
     .attr('fill', fill)
     .attr('d', arc)
-    .each(function (d) {
-      this._current = d
+    .on('mouseover', arcMouseOver)
+    .on('mouseleave', arcMouseLeave)
+}
+
+var lastId = ''
+
+function arcMouseOver (ev) {
+  const id = ev.data.id
+
+  if (lastId !== id) {
+    arcMouseLeave(ev)
+  }
+
+  svg.selectAll('path')
+    .transition()
+    .filter(function (p) {
+      return p.data.id !== id
     })
+    .attr('fill', () => '#333333')
+    .style('opacity', 0.2)
+
+  lastId = id
+}
+
+function arcMouseLeave (ev) {
+  svg.selectAll('path')
+    .transition('restore')
+    .attr('fill', fill)
+    .style('opacity', 1)
+
+  lastId = ''
 }
