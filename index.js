@@ -5,7 +5,7 @@ const bankai = require('bankai')
 const http = require('http')
 const path = require('path')
 const WebSocketServer = require('ws').Server
-const client = path.join(__dirname, 'client.js')
+const client = path.join(__dirname, 'client')
 
 function build (upring) {
   const assets = bankai()

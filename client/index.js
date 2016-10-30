@@ -6,8 +6,11 @@ const sheetify = require('sheetify')
 const yo = require('yo-yo')
 const wr = require('winresize-event')
 
+const palette = d3.schemeCategory20b
+const fill = require('./fill')(palette)
+
 sheetify('normalize.css')
-const style = sheetify('./main.css')
+const style = sheetify('../main.css')
 
 var width = 0
 var height = 0
@@ -26,10 +29,6 @@ function computeSizes (dim) {
 
 computeSizes(wr.getWinSize())
 
-const palette = d3.schemeCategory20b
-var paletteCounter = 0
-const idColors = new Map()
-
 const parent = yo`
   <div class=${style} id='wheel'>
     <div id='tooltip'>
@@ -44,6 +43,8 @@ const svg = d3.select('div#wheel').append('svg')
   .attr('height', height)
   .append('g')
   .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
+
+const { arcMouseOver, arcMouseLeave } = require('./mouseOver')(svg, fill)
 
 wr.winResize.on(function (dim) {
   computeSizes(dim)
@@ -65,8 +66,6 @@ wr.winResize.on(function (dim) {
     .attr('d', arc)
 })
 
-var div = d3.select('div#tooltip').style('opacity', 0)
-
 const pie = d3.pie()
   .value(function (d) {
     return d.point
@@ -76,21 +75,6 @@ const pie = d3.pie()
 const arc = d3.arc()
   .innerRadius(innerRadius)
   .outerRadius(outerRadius)
-
-function fill (d, i) {
-  const name = d.data.id
-  var color = idColors.get(name)
-  if (!color) {
-    color = palette[paletteCounter++]
-    idColors.set(name, color)
-  }
-
-  if (paletteCounter >= palette.length) {
-    paletteCounter = 0
-  }
-
-  return color
-}
 
 const conn = new WebSocket(document.URL.replace('http', 'ws'))
 var path
@@ -117,43 +101,3 @@ function getPath (data) {
     .on('mouseleave', arcMouseLeave)
 }
 
-var lastId = ''
-
-function arcMouseOver (ev) {
-  const id = ev.data.id
-
-  if (lastId !== id) {
-    arcMouseLeave(ev)
-  }
-
-  svg.selectAll('path')
-    .transition()
-    .filter(function (p) {
-      return p.data.id !== id
-    })
-    .attr('fill', () => '#333333')
-    .style('opacity', 0.2)
-
-  div.transition()
-    .duration(200)
-    .style('opacity', 0.9)
-
-  div.html(`<b>id:</b>${id}<br/>`)
-    .style('left', (d3.event.pageX) + 'px')
-    .style('top', (d3.event.pageY - 28) + 'px')
-
-  lastId = id
-}
-
-function arcMouseLeave (ev) {
-  svg.selectAll('path')
-    .transition('restore')
-    .attr('fill', fill)
-    .style('opacity', 1)
-
-  div.transition()
-    .duration(200)
-    .style('opacity', 0)
-
-  lastId = ''
-}
