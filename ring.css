@@ -17,3 +17,8 @@ svg {
   border-radius: 8px;
   pointer-events: none;
 }
+
+line {
+  stroke-opacity: 0.6;
+  stroke-width: 3;
+}

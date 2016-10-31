@@ -7,7 +7,7 @@ function setupFill (scale, maxColor) {
   return fill
 
   function fill (d, i) {
-    const name = d.data.id
+    const name = d.id || d.data.id
     var color = idColors.get(name)
     if (!color) {
       color = scale(paletteCounter++)

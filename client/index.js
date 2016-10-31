@@ -81,18 +81,35 @@ const parent = yo`
 
 document.body.appendChild(parent)
 
-const svg = d3.select('div#wheel').append('svg')
+const parentSvg = d3.select('div#wheel').append('svg')
   .attr('width', width)
   .attr('height', height)
+
+const svg3 = parentSvg.append('g')
+
+const svg = parentSvg
   .append('g')
   .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
 
-const svg2 = d3.select('div#wheel').select('svg')
+const svg2 = parentSvg
   .append('g')
   .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
+
+const arc = d3.arc()
+  .innerRadius(innerRadius)
+  .outerRadius(outerRadius)
 
 const { arcMouseOver, arcMouseLeave } = require('./mouseOver')(svg, fill)
 const hashDisplay = require('./hash')(radius, svg2, fillColor)
+const text = require('./text')(svg3, height, svg, arc, width, fill)
+
+var count = 1
+setInterval(function () {
+  text.add({
+    text: 'hello' + count++,
+    point: Math.random() * (Math.pow(2, 32) - 1)
+  })
+}, 1000)
 
 wr.winResize.on(function (dim) {
   computeSizes(dim)
@@ -117,6 +134,8 @@ wr.winResize.on(function (dim) {
     .attr('d', arc)
 
   hashDisplay.changeRadius(radius)
+
+  text.resize(width, height)
 })
 
 const pie = d3.pie()
@@ -124,10 +143,6 @@ const pie = d3.pie()
     return d.point
   })
   .sort(null)
-
-const arc = d3.arc()
-  .innerRadius(innerRadius)
-  .outerRadius(outerRadius)
 
 const conn = new WebSocket(document.URL.replace('http', 'ws'))
 var path
