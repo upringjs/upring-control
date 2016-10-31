@@ -17,14 +17,19 @@ function setupMouseOver (svg, fill) {
     }
 
     svg.selectAll('path')
-      .transition()
+      .transition('mouseover')
+
+      // to handle mouseOver without mouseLeave
+      .attr('fill', fill)
+      .style('opacity', 1)
+
       .filter(function (p) {
         return p.data.id !== id
       })
       .attr('fill', () => '#333333')
       .style('opacity', 0.2)
 
-    div.transition()
+    div.transition('mouseover')
       .duration(200)
       .style('opacity', 0.9)
 
@@ -37,11 +42,11 @@ function setupMouseOver (svg, fill) {
 
   function arcMouseLeave (ev) {
     svg.selectAll('path')
-      .transition('restore')
+      .transition('mouseover')
       .attr('fill', fill)
       .style('opacity', 1)
 
-    div.transition()
+    div.transition('restore')
       .duration(200)
       .style('opacity', 0)
 
