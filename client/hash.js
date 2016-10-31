@@ -3,7 +3,6 @@
 const d3 = require('d3')
 
 function create (radius, svg, color) {
-  console.log(color)
   const arc = d3.arc()
 
   var innerRadius = 0
