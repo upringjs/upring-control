@@ -5,12 +5,14 @@ const d3 = require('d3')
 const sheetify = require('sheetify')
 const yo = require('yo-yo')
 const wr = require('winresize-event')
+const xhr = require('xhr')
 
 const palette = d3.schemeCategory20b
 const fill = require('./fill')(palette)
 
 sheetify('normalize.css')
-const style = sheetify('../main.css')
+const ringStyle = sheetify('../ring.css')
+const barStyle = sheetify('../bar.css')
 
 var width = 0
 var height = 0
@@ -30,20 +32,39 @@ function computeSizes (dim) {
 computeSizes(wr.getWinSize())
 
 const bar = yo`
-  <div>
-    <p>
-      Hello from upring
-    </p>
+  <div class=${barStyle} >
     <form>
-      <input type='text'>
+      Hello from upring
+      <input type='text' oninput=${changePoint}>
     </form>
   </div>
 `
 
+var lastPoint = null
+
+function changePoint (ev) {
+  const body = ev.target.value
+
+  if (body.length === 0) {
+    hashDisplay.remove()
+    return
+  }
+
+  xhr.post('/hash', { body }, function (err, res, body) {
+    if (err || res.statusCode !== 200) {
+      hashDisplay.remove()
+      return
+    }
+
+    lastPoint = JSON.parse(body)
+    hashDisplay.plot(svg, lastPoint)
+  })
+}
+
 document.body.appendChild(bar)
 
 const parent = yo`
-  <div class=${style} id='wheel'>
+  <div class=${ringStyle} id='wheel'>
     <div id='tooltip'>
     </div>
   </div>
@@ -111,11 +132,9 @@ conn.onmessage = function (msg) {
   }
 
   path = getPath(data)
-}
 
-setInterval(function () {
-  hashDisplay.plot(svg, { point: Math.random() * Math.pow(2, 32) })
-}, 2000)
+  hashDisplay.plot(svg, lastPoint)
+}
 
 function getPath (data) {
   return svg.datum(data).selectAll('path')

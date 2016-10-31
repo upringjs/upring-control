@@ -35,10 +35,17 @@ function create (radius, svg) {
         .append('path')
         .attr('fill', '#FFFF00')
         .attr('d', arc)
+        .attr('opacity', 0)
+
+      path
+        .transition()
+        .duration(500)
+        .attr('opacity', 1)
     } else {
       path
         .transition()
         .duration(1500)
+        .attr('opacity', 1)
         .attrTween('d', arcTween(startAngle, endAngle))
     }
   }
@@ -63,7 +70,8 @@ function create (radius, svg) {
   function remove () {
     if (path) {
       path.transition()
-        .duration(1500)
+        .duration(500)
+        .attr('opacity', 0)
         .remove()
       path = null
     }

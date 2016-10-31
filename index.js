@@ -30,6 +30,7 @@ function build (upring) {
       case '/whoami': return ready(res) && whoami(req, res)
       case '/peers': return ready(res) && peers(req, res)
       case '/ring': return ready(res) && ring(req, res)
+      case '/hash': return ready(res) && hash(req, res)
       case '/bundle.js': return js(req, res).pipe(res)
       case '/bundle.css': return css(req, res).pipe(res)
       default:
@@ -81,6 +82,29 @@ function build (upring) {
 
   function ring (req, res) {
     res.end(JSON.stringify(computeRing(), null, 2))
+  }
+
+  function hash (req, res) {
+    if (req.method !== 'POST') {
+      res.statusCode = 404
+      res.end()
+      return
+    }
+    var chunks = ''
+    req.setEncoding('utf8')
+    req.on('data', function (d) {
+      chunks += d
+    })
+    req.on('end', function () {
+      if (chunks.length === 0) {
+        res.statusCode = 422
+        res.end()
+        return
+      }
+      res.end(JSON.stringify({
+        point: upring._hashring.hash(chunks)
+      }, null, 2))
+    })
   }
 
   function computeRing () {
