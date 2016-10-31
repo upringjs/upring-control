@@ -26,7 +26,7 @@ function setupMouseOver (svg, fill) {
       .filter(function (p) {
         return p.data.id !== id
       })
-      .attr('fill', () => '#333333')
+      .attr('fill', '#333333')
       .style('opacity', 0.2)
 
     div.transition('mouseover')

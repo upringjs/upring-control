@@ -1,8 +1,23 @@
 
 :host {
-  padding: 10px;
+  position: absolute;
+  left: 0px;
+  right: 0px;
 }
 
-input {
-  display: 'inline'
+.logo {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  max-height:5em;
+}
+
+.inputBox {
+  background-color: #F1F1F1;
+  padding: 1em;
+  margin-right: 2em;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  border-radius: 0 0 0.5em 0.5em;
 }

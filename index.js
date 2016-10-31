@@ -6,6 +6,8 @@ const http = require('http')
 const path = require('path')
 const WebSocketServer = require('ws').Server
 const client = path.join(__dirname, 'client')
+const pump = require('pump')
+const fs = require('fs')
 
 function build (upring) {
   const assets = bankai()
@@ -33,6 +35,9 @@ function build (upring) {
       case '/hash': return ready(res) && hash(req, res)
       case '/bundle.js': return js(req, res).pipe(res)
       case '/bundle.css': return css(req, res).pipe(res)
+      case '/upring.png':
+        res.setHeader('Content-Type', 'image/png')
+        return pump(fs.createReadStream(path.join(__dirname, './upring.png')), res)
       default:
         res.statusCode = 404
         return res.end('404 not found')

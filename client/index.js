@@ -28,8 +28,8 @@ var innerRadius = 0
 var outerRadius = 0
 
 function computeSizes (dim) {
-  width = Math.floor(dim.width * 90 / 100)
-  height = Math.floor(dim.height * 90 / 100)
+  width = Math.floor(dim.width * 98 / 100)
+  height = Math.floor(dim.height * 98 / 100)
   radius = Math.min(width, height) / 2
 
   innerRadius = radius * 70 / 100
@@ -40,10 +40,10 @@ computeSizes(wr.getWinSize())
 
 const bar = yo`
   <div class=${barStyle} >
-    <form>
-      Hello from upring
-      <input type='text' oninput=${changePoint}>
-    </form>
+    <img class="logo" src='/upring.png'>
+    <div class="inputBox">
+      <input type='text' oninput=${changePoint} placeholder="Search on the hashring">
+    </div>
   </div>
 `
 
