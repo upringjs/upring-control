@@ -8,7 +8,6 @@ const wr = require('winresize-event')
 
 const palette = d3.schemeCategory20b
 const fill = require('./fill')(palette)
-const addPoint = require('./hash')
 
 sheetify('normalize.css')
 const style = sheetify('../main.css')
@@ -63,6 +62,7 @@ const svg2 = d3.select('div#wheel').select('svg')
   .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
 
 const { arcMouseOver, arcMouseLeave } = require('./mouseOver')(svg, fill)
+const hashDisplay = require('./hash')(radius, svg2)
 
 wr.winResize.on(function (dim) {
   computeSizes(dim)
@@ -75,6 +75,9 @@ wr.winResize.on(function (dim) {
   svg.transition('winresize')
     .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
 
+  svg2.transition('winresize')
+    .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
+
   arc
     .innerRadius(innerRadius)
     .outerRadius(outerRadius)
@@ -82,6 +85,8 @@ wr.winResize.on(function (dim) {
   svg.selectAll('path')
     .transition('winresize')
     .attr('d', arc)
+
+  hashDisplay.changeRadius(radius)
 })
 
 const pie = d3.pie()
@@ -106,9 +111,11 @@ conn.onmessage = function (msg) {
   }
 
   path = getPath(data)
-
-  addPoint(radius, svg2, svg, { point: Math.random() * Math.pow(2, 32) })
 }
+
+setInterval(function () {
+  hashDisplay.plot(svg, { point: Math.random() * Math.pow(2, 32) })
+}, 2000)
 
 function getPath (data) {
   return svg.datum(data).selectAll('path')

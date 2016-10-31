@@ -2,34 +2,84 @@
 
 const d3 = require('d3')
 
-function addPoint (radius, svg, main, point) {
-  const innerRadius = radius * 92 / 100
-  const outerRadius = radius * 100 / 100
-
+function create (radius, svg) {
   const arc = d3.arc()
-    .innerRadius(innerRadius)
-    .outerRadius(outerRadius)
 
-  var startAngle
-  var endAngle = 0
+  var innerRadius = 0
+  var outerRadius = 0
+  var path
 
-  main.selectAll('path')
-    .each(function (p, i) {
-      if (p.data.point < point.point) {
-        startAngle = p.startAngle
-        endAngle = p.endAngle
+  changeRadius(radius)
+
+  return { plot, changeRadius, remove }
+
+  function plot (main, point) {
+    var startAngle
+    var endAngle = 0
+
+    main.selectAll('path')
+      .each(function (p, i) {
+        if (p.data.point < point.point) {
+          startAngle = p.startAngle
+          endAngle = p.endAngle
+        }
+      })
+
+    if (!path) {
+      path = svg.selectAll('path')
+        .data([{
+          startAngle,
+          endAngle
+        }])
+        .enter()
+        .append('path')
+        .attr('fill', '#FFFF00')
+        .attr('d', arc)
+    } else {
+      path
+        .transition()
+        .duration(1500)
+        .attrTween('d', arcTween(startAngle, endAngle))
+    }
+  }
+
+  function changeRadius (r) {
+    computeVars(r)
+
+    arc
+      .innerRadius(innerRadius)
+      .outerRadius(outerRadius)
+
+    svg.selectAll('path')
+      .transition('winresize')
+      .attr('d', arc)
+  }
+
+  function computeVars (r) {
+    innerRadius = r * 92 / 100
+    outerRadius = r * 100 / 100
+  }
+
+  function remove () {
+    if (path) {
+      path.transition()
+        .duration(1500)
+        .remove()
+      path = null
+    }
+  }
+
+  function arcTween (startAngle, endAngle) {
+    return function (d) {
+      const interpolateEnd = d3.interpolate(d.endAngle, endAngle)
+      const interpolateStart = d3.interpolate(d.startAngle, startAngle)
+      return function (t) {
+        d.endAngle = interpolateEnd(t)
+        d.startAngle = interpolateStart(t)
+        return arc(d)
       }
-    })
-
-  svg.selectAll('path')
-    .data([{
-      startAngle,
-      endAngle
-    }])
-    .enter()
-    .append('path')
-    .attr('fill', '#FFFF00')
-    .attr('d', arc)
+    }
+  }
 }
 
-module.exports = addPoint
+module.exports = create
