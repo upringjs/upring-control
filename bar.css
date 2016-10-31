@@ -9,7 +9,9 @@
   position: absolute;
   left: 0px;
   top: 0px;
-  max-height:5em;
+  height:7em;
+  margin-left: 0.1em;
+  margin-top: 0.1em;
 }
 
 .inputBox {

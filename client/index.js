@@ -40,7 +40,9 @@ computeSizes(wr.getWinSize())
 
 const bar = yo`
   <div class=${barStyle} >
-    <img class="logo" src='/upring.png'>
+    <a href='https://github.com/mcollina/upring' target="blank">
+      <img class="logo" src='/upring.png'>
+    </a>
     <div class="inputBox">
       <input type='text' oninput=${changePoint} placeholder="Search on the hashring">
     </div>
