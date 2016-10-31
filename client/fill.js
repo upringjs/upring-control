@@ -1,6 +1,6 @@
 'use strict'
 
-function setupFill (palette) {
+function setupFill (scale, maxColor) {
   const idColors = new Map()
   var paletteCounter = 0
 
@@ -10,11 +10,11 @@ function setupFill (palette) {
     const name = d.data.id
     var color = idColors.get(name)
     if (!color) {
-      color = palette[paletteCounter++]
+      color = scale(paletteCounter++)
       idColors.set(name, color)
     }
 
-    if (paletteCounter >= palette.length) {
+    if (paletteCounter >= maxColor) {
       paletteCounter = 0
     }
 

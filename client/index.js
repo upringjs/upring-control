@@ -6,9 +6,16 @@ const sheetify = require('sheetify')
 const yo = require('yo-yo')
 const wr = require('winresize-event')
 const xhr = require('xhr')
+const d3sc = require('d3-scale-chromatic')
+const CompCol = require('complementary-colors')
+const maxColor = 10
 
-const palette = d3.schemeCategory20b
-const fill = require('./fill')(palette)
+// TODO make the scale and the max number of color dynamic
+const scale = d3.scaleSequential(d3sc.interpolatePurples).domain([maxColor, 0])
+const fill = require('./fill')(scale, maxColor)
+
+const compCol = new CompCol(scale(1))
+const fillColor = asColor(compCol.triad()[2])
 
 sheetify('normalize.css')
 const ringStyle = sheetify('../ring.css')
@@ -83,7 +90,7 @@ const svg2 = d3.select('div#wheel').select('svg')
   .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
 
 const { arcMouseOver, arcMouseLeave } = require('./mouseOver')(svg, fill)
-const hashDisplay = require('./hash')(radius, svg2)
+const hashDisplay = require('./hash')(radius, svg2, fillColor)
 
 wr.winResize.on(function (dim) {
   computeSizes(dim)
@@ -133,7 +140,9 @@ conn.onmessage = function (msg) {
 
   path = getPath(data)
 
-  hashDisplay.plot(svg, lastPoint)
+  if (lastPoint) {
+    hashDisplay.plot(svg, lastPoint)
+  }
 }
 
 function getPath (data) {
@@ -147,3 +156,6 @@ function getPath (data) {
     .on('mouseleave', arcMouseLeave)
 }
 
+function asColor (obj) {
+  return 'rgb(' + obj.r + ', ' + obj.g + ', ' + obj.b + ')'
+}

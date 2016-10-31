@@ -2,7 +2,8 @@
 
 const d3 = require('d3')
 
-function create (radius, svg) {
+function create (radius, svg, color) {
+  console.log(color)
   const arc = d3.arc()
 
   var innerRadius = 0
@@ -33,7 +34,7 @@ function create (radius, svg) {
         }])
         .enter()
         .append('path')
-        .attr('fill', '#FFFF00')
+        .attr('fill', color)
         .attr('d', arc)
         .attr('opacity', 0)
 
