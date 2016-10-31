@@ -1,5 +1,7 @@
 'use strict'
 
+const d3 = require('d3')
+
 function create (svg, height, main, arc, width, fill) {
   var lines = []
   var lineHeight = 18
@@ -73,17 +75,16 @@ function create (svg, height, main, arc, width, fill) {
       .attr('opacity', 0)
       .remove()
 
-    svg.selectAll('line')
+    svg.selectAll('path')
       .data(lines)
       .enter()
-      .append('line')
-      .attr('x1', (d) => d.textLength + 10)
-      .attr('x2', (d) => d.arcCoord.x)
-      .attr('y1', (d) => Math.floor(d.y - lineHeight / 2))
-      .attr('y2', (d) => d.arcCoord.y)
+      .append('path')
+      .attr('class', 'line')
+      .attr('d', renderLine)
+      .attr('fill', 'rgba(255,255,255,0)')
       .attr('opacity', 0)
 
-    svg.selectAll('line')
+    svg.selectAll('path')
       .filter((d) => {
         return d.y < lineHeight * 2
       })
@@ -91,16 +92,13 @@ function create (svg, height, main, arc, width, fill) {
       .attr('opacity', 0)
       .remove()
 
-    svg.selectAll('line')
+    svg.selectAll('path')
       .filter((d) => {
         return d.y >= lineHeight * 2
       })
       .transition()
+      .attr('d', renderLine)
       .duration(500)
-      .attr('x1', (d) => d.textLength + 10)
-      .attr('x2', (d) => d.arcCoord.x)
-      .attr('y1', (d) => Math.floor(d.y - lineHeight / 2))
-      .attr('y2', (d) => d.arcCoord.y)
       .attr('stroke', fill)
       .attr('opacity', 0.5)
 
@@ -118,12 +116,9 @@ function create (svg, height, main, arc, width, fill) {
       return acc - lineHeight
     }, height)
 
-    svg.selectAll('line')
+    svg.selectAll('path')
       .transition('winresize')
-      .attr('x1', () => 80) // TODO make this dynamic
-      .attr('x2', (d) => d.arcCoord.x)
-      .attr('y1', (d) => Math.floor(d.y - lineHeight / 2))
-      .attr('y2', (d) => d.arcCoord.y)
+      .attr('d', renderLine)
 
     svg.selectAll('text')
       .filter((d) => {
@@ -165,6 +160,24 @@ function create (svg, height, main, arc, width, fill) {
 
     svg.selectAll('line')
       .remove()
+  }
+
+  function renderLine (d) {
+    const source = {
+      x: d.textLength + 10,
+      y: Math.floor(d.y - lineHeight / 2)
+    }
+    const dest = d.arcCoord
+    const mid = {
+      x: Math.floor(dest.x / 2) - source.x,
+      y: dest.y
+    }
+    const path = d3.path()
+
+    path.moveTo(source.x, source.y)
+    path.quadraticCurveTo(mid.x, mid.y, dest.x, dest.y)
+
+    return path.toString()
   }
 }
 

@@ -21,7 +21,7 @@ function setupMouseOver (svg, fill) {
 
       // to handle mouseOver without mouseLeave
       .attr('fill', fill)
-      .style('opacity', 1)
+      .style('opacity', 0.8)
 
       .filter(function (p) {
         return p.data.id !== id

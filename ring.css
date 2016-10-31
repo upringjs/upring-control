@@ -18,7 +18,7 @@ svg {
   pointer-events: none;
 }
 
-line {
-  stroke-opacity: 0.6;
+.line {
+  background-color: red;
   stroke-width: 3;
 }
