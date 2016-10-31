@@ -156,6 +156,7 @@ conn.onmessage = function (msg) {
   }
 
   path = getPath(data)
+  text.clear()
 
   if (lastPoint) {
     hashDisplay.plot(svg, lastPoint)

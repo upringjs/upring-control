@@ -4,7 +4,7 @@ function create (svg, height, main, arc, width, fill) {
   var lines = []
   var lineHeight = 18
 
-  return { add, resize }
+  return { add, resize, clear }
 
   function add (em) {
     lines.push(em)
@@ -60,6 +60,9 @@ function create (svg, height, main, arc, width, fill) {
       .attr('y', (d) => d.y)
       .text((d) => d.text)
       .attr('opacity', 1)
+      .each(function (d) {
+        d.textLength = this.getComputedTextLength()
+      })
 
     svg.selectAll('text')
       .filter((d) => {
@@ -74,7 +77,7 @@ function create (svg, height, main, arc, width, fill) {
       .data(lines)
       .enter()
       .append('line')
-      .attr('x1', () => 80) // TODO make this dynamic
+      .attr('x1', (d) => d.textLength + 10)
       .attr('x2', (d) => d.arcCoord.x)
       .attr('y1', (d) => Math.floor(d.y - lineHeight / 2))
       .attr('y2', (d) => d.arcCoord.y)
@@ -94,7 +97,7 @@ function create (svg, height, main, arc, width, fill) {
       })
       .transition()
       .duration(500)
-      .attr('x1', () => 80) // TODO make this dynamic
+      .attr('x1', (d) => d.textLength + 10)
       .attr('x2', (d) => d.arcCoord.x)
       .attr('y1', (d) => Math.floor(d.y - lineHeight / 2))
       .attr('y2', (d) => d.arcCoord.y)
@@ -151,6 +154,17 @@ function create (svg, height, main, arc, width, fill) {
         y: coord[1] + Math.floor(height / 2)
       }
     })
+  }
+
+  function clear () {
+    lines = []
+
+    // TODO add a transition
+    svg.selectAll('text')
+      .remove()
+
+    svg.selectAll('line')
+      .remove()
   }
 }
 
