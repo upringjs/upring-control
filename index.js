@@ -84,12 +84,14 @@ function build (upring) {
   }
 
   function computeRing () {
-    return upring._hashring._entries.map(function (entry) {
+    const ring = upring._hashring._entries.map(function (entry) {
       return {
         id: entry.peer.id,
         point: entry.point
       }
     })
+
+    return ring
   }
 }
 

@@ -8,6 +8,7 @@ const wr = require('winresize-event')
 
 const palette = d3.schemeCategory20b
 const fill = require('./fill')(palette)
+const addPoint = require('./hash')
 
 sheetify('normalize.css')
 const style = sheetify('../main.css')
@@ -29,6 +30,19 @@ function computeSizes (dim) {
 
 computeSizes(wr.getWinSize())
 
+const bar = yo`
+  <div>
+    <p>
+      Hello from upring
+    </p>
+    <form>
+      <input type='text'>
+    </form>
+  </div>
+`
+
+document.body.appendChild(bar)
+
 const parent = yo`
   <div class=${style} id='wheel'>
     <div id='tooltip'>
@@ -41,6 +55,10 @@ document.body.appendChild(parent)
 const svg = d3.select('div#wheel').append('svg')
   .attr('width', width)
   .attr('height', height)
+  .append('g')
+  .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
+
+const svg2 = d3.select('div#wheel').select('svg')
   .append('g')
   .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
 
@@ -88,6 +106,8 @@ conn.onmessage = function (msg) {
   }
 
   path = getPath(data)
+
+  addPoint(radius, svg2, svg, { point: Math.random() * Math.pow(2, 32) })
 }
 
 function getPath (data) {
