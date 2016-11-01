@@ -158,7 +158,7 @@ function create (svg, height, main, arc, width, fill) {
     svg.selectAll('text')
       .remove()
 
-    svg.selectAll('line')
+    svg.selectAll('path')
       .remove()
   }
 
