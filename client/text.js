@@ -116,10 +116,6 @@ function create (svg, height, main, arc, width, fill) {
       return acc - lineHeight
     }, height)
 
-    svg.selectAll('path')
-      .transition('winresize')
-      .attr('d', renderLine)
-
     svg.selectAll('text')
       .filter((d) => {
         return d.y >= lineHeight * 2
@@ -149,6 +145,10 @@ function create (svg, height, main, arc, width, fill) {
         y: coord[1] + Math.floor(height / 2)
       }
     })
+
+    svg.selectAll('path')
+      .transition('winresize')
+      .attr('d', renderLine)
   }
 
   function clear () {
