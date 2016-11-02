@@ -29,13 +29,15 @@ function setupMouseOver (svg, fill) {
       .attr('fill', '#333333')
       .style('opacity', 0.2)
 
-    div.transition('mouseover')
-      .duration(200)
-      .style('opacity', 0.9)
+    if (d3.event) {
+      div.transition('mouseover')
+        .duration(200)
+        .style('opacity', 0.9)
 
-    div.html(`<b>id:</b>${id}<br/>`)
-      .style('left', (d3.event.pageX) + 'px')
-      .style('top', (d3.event.pageY - 28) + 'px')
+      div.html(`<b>id:</b>${id}<br/>`)
+        .style('left', (d3.event.pageX) + 'px')
+        .style('top', (d3.event.pageY - 28) + 'px')
+    }
 
     lastId = id
   }

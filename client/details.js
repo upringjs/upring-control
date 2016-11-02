@@ -7,16 +7,24 @@ const style = sheetify('./info.css')
 
 function build (svg) {
   var elem = render()
+  var lastId = null
 
   document.body.appendChild(elem)
 
   return function onclick (ev) {
     const id = ev.data.id
+
+    if (lastId === id) {
+      hide()
+      return
+    }
+
     xhr.get(`/peer/${id}`, function (err, res, body) {
       if (err) {
         console.log(err)
         return
       }
+      lastId = id
       elem = yo.update(elem, render(JSON.parse(body)))
     })
   }
@@ -43,6 +51,7 @@ function build (svg) {
   }
 
   function hide () {
+    lastId = null
     elem = yo.update(elem, render())
   }
 

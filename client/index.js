@@ -110,6 +110,7 @@ const { arcMouseOver, arcMouseLeave } = require('./mouseOver')(svg, fill)
 const hashDisplay = require('./hash')(radius, svg2, fillColor)
 const text = require('./text')(svg3, height, svg, arc, width, fill)
 const onclick = require('./details')(svg)
+const legend = require('./legend')(svg, onclick, arcMouseOver, arcMouseLeave, fill)
 
 wr.winResize.on(function (dim) {
   computeSizes(dim)
@@ -162,6 +163,8 @@ conn.onmessage = function (msg) {
     if (lastPoint) {
       hashDisplay.plot(svg, lastPoint)
     }
+
+    legend(data.ring)
   } else if (data.trace) {
     data.trace.keys.forEach(function (pair) {
       text.add({
