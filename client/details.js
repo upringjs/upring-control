@@ -3,7 +3,7 @@
 const xhr = require('xhr')
 const yo = require('yo-yo')
 const sheetify = require('sheetify')
-const style = sheetify('../info.css')
+const style = sheetify('./info.css')
 
 function build (svg) {
   var elem = render()

@@ -18,8 +18,8 @@ const compCol = new CompCol(scale(1))
 const fillColor = asColor(compCol.triad()[2])
 
 sheetify('normalize.css')
-const ringStyle = sheetify('../ring.css')
-const barStyle = sheetify('../bar.css')
+const ringStyle = sheetify('./ring.css')
+const barStyle = sheetify('./bar.css')
 
 var width = 0
 var height = 0
