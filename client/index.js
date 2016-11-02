@@ -50,16 +50,23 @@ const bar = yo`
 `
 
 var lastPoint = null
+var pointTimer = null
 
 function changePoint (ev) {
-  const body = ev.target.value
+  const key = ev.target.value
 
-  if (body.length === 0) {
+  if (key.length === 0) {
     hashDisplay.remove()
     return
   }
 
-  xhr.post('/hash', { body }, function (err, res, body) {
+  clearTimeout(pointTimer)
+  pointTimer = setTimeout(fetchPoint.bind(null, key), 100)
+}
+
+function fetchPoint (key) {
+  pointTimer = null
+  xhr.post('/hash', { body: key }, function (err, res, body) {
     if (err || res.statusCode !== 200) {
       hashDisplay.remove()
       return
@@ -103,14 +110,6 @@ const { arcMouseOver, arcMouseLeave } = require('./mouseOver')(svg, fill)
 const hashDisplay = require('./hash')(radius, svg2, fillColor)
 const text = require('./text')(svg3, height, svg, arc, width, fill)
 
-var count = 1
-setInterval(function () {
-  text.add({
-    text: 'hello' + count++,
-    point: Math.random() * (Math.pow(2, 32) - 1)
-  })
-}, 1000)
-
 wr.winResize.on(function (dim) {
   computeSizes(dim)
 
@@ -150,16 +149,25 @@ var path
 conn.onmessage = function (msg) {
   const data = JSON.parse(msg.data)
 
-  // TODO add a transition
-  if (path) {
-    path.remove()
-  }
+  if (data.ring) {
+    // TODO add a transition
+    if (path) {
+      path.remove()
+    }
 
-  path = getPath(data)
-  text.clear()
+    path = getPath(data.ring)
+    text.clear()
 
-  if (lastPoint) {
-    hashDisplay.plot(svg, lastPoint)
+    if (lastPoint) {
+      hashDisplay.plot(svg, lastPoint)
+    }
+  } else if (data.trace) {
+    data.trace.keys.forEach(function (pair) {
+      text.add({
+        text: pair.key,
+        point: pair.hash
+      })
+    })
   }
 }
 

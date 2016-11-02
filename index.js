@@ -55,13 +55,37 @@ function build (upring) {
     ws.send(JSON.stringify(computeRing()))
   })
 
-  upring.on('peerUp', sendRing)
+  upring.on('peerUp', peerUp)
   upring.on('peerDown', sendRing)
 
   function sendRing () {
     const ring = computeRing()
     connections.forEach(function (conn) {
       conn.send(JSON.stringify(ring))
+    })
+  }
+
+  function peerUp (peer) {
+    sendRing()
+    upring.peerConn(peer).request({
+      ns: 'monitoring',
+      cmd: 'trace'
+    }, function (err, res) {
+      if (err) {
+        upring.logger.warn(err)
+        return
+      }
+
+      upring.logger.info({ peer }, 'trace set up')
+
+      res.streams.trace.on('data', function (trace) {
+        if (trace.keys.length === 0) {
+          return
+        }
+        connections.forEach(function (conn) {
+          conn.send(JSON.stringify({ trace }))
+        })
+      })
     })
   }
 
@@ -120,7 +144,7 @@ function build (upring) {
       }
     })
 
-    return ring
+    return { ring }
   }
 }
 
