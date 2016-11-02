@@ -27,6 +27,9 @@ function build (upring) {
   })
 
   const server = http.createServer((req, res) => {
+    if (req.url.indexOf('/peer/') === 0) {
+      return ready(res) && peerDetails(req, res)
+    }
     switch (req.url) {
       case '/': return html(req, res).pipe(res)
       case '/whoami': return ready(res) && whoami(req, res)
@@ -145,6 +148,22 @@ function build (upring) {
     })
 
     return { ring }
+  }
+
+  function peerDetails (req, res) {
+    const id = req.url.split('/peer/')[1]
+    const conn = upring.peerConn({ id })
+    conn.request({
+      ns: 'monitoring',
+      cmd: 'info'
+    }, function (err, info) {
+      if (err) {
+        res.statusCode = 500
+        res.end(err.message)
+        return
+      }
+      res.end(JSON.stringify(info, null, 2))
+    })
   }
 }
 

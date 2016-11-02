@@ -109,6 +109,7 @@ const arc = d3.arc()
 const { arcMouseOver, arcMouseLeave } = require('./mouseOver')(svg, fill)
 const hashDisplay = require('./hash')(radius, svg2, fillColor)
 const text = require('./text')(svg3, height, svg, arc, width, fill)
+const onclick = require('./details')(svg)
 
 wr.winResize.on(function (dim) {
   computeSizes(dim)
@@ -180,6 +181,7 @@ function getPath (data) {
     .attr('d', arc)
     .on('mouseover', arcMouseOver)
     .on('mouseleave', arcMouseLeave)
+    .on('click', onclick)
 }
 
 function asColor (obj) {
