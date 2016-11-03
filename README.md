@@ -2,7 +2,6 @@
 
 [![npm version][npm-badge]][npm-url]
 [![Build Status][travis-badge]][travis-url]
-[![Coverage Status][coveralls-badge]][coveralls-url]
 
 Control panel for [UpRing][upring].
 
@@ -48,7 +47,7 @@ MIT
 [upring]: https://github.com/mcollina/upring
 [logo-url]: https://raw.githubusercontent.com/mcollina/upring/master/upring.png
 [screenshot-url]: https://raw.githubusercontent.com/mcollina/upring-control/master/control.png
-[npm-badge]: https://badge.fury.io/js/upring.svg
-[npm-url]: https://badge.fury.io/js/upring
-[travis-badge]: https://api.travis-ci.org/mcollina/upring.svg
-[travis-url]: https://travis-ci.org/mcollina/upring
+[npm-badge]: https://badge.fury.io/js/upring-control.svg
+[npm-url]: https://badge.fury.io/js/upring-control
+[travis-badge]: https://api.travis-ci.org/mcollina/upring-control.svg
+[travis-url]: https://travis-ci.org/mcollina/upring-control
