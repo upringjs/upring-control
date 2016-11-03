@@ -1,7 +1,6 @@
 # upring-control
 
 [![npm version][npm-badge]][npm-url]
-[![Build Status][travis-badge]][travis-url]
 
 Control panel for [UpRing][upring].
 
@@ -49,5 +48,3 @@ MIT
 [screenshot-url]: https://raw.githubusercontent.com/mcollina/upring-control/master/control.png
 [npm-badge]: https://badge.fury.io/js/upring-control.svg
 [npm-url]: https://badge.fury.io/js/upring-control
-[travis-badge]: https://api.travis-ci.org/mcollina/upring-control.svg
-[travis-url]: https://travis-ci.org/mcollina/upring-control
