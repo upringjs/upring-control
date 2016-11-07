@@ -1,6 +1,6 @@
 {
   "name": "upring-control",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "control panel for upring",
   "main": "index.js",
   "bin": {
