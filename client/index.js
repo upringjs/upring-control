@@ -182,6 +182,7 @@ function getPath (data) {
     .data(pie)
     .enter()
     .append('path')
+    .style('opacity', 1)
     .attr('fill', fill)
     .attr('d', arc)
     .on('mouseover', arcMouseOver)
