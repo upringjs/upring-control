@@ -161,7 +161,9 @@ conn.onmessage = function (msg) {
     text.clear()
 
     if (lastPoint) {
-      hashDisplay.plot(svg, lastPoint)
+      setTimeout(function () {
+        hashDisplay.plot(svg, lastPoint)
+      }, 500)
     }
 
     legend(data.ring)
