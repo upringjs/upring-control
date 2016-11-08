@@ -33,7 +33,7 @@
     "bufferutil": "^1.2.1",
     "complementary-colors": "^1.0.2",
     "d3": "^4.3.0",
-    "d3-scale-chromatic": "^1.0.2",
+    "d3-scale-chromatic": "^1.1.0",
     "minimist": "^1.2.0",
     "normalize.css": "^5.0.0",
     "pino": "^2.14.0",

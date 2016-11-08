@@ -8,7 +8,8 @@ const wr = require('winresize-event')
 const xhr = require('xhr')
 const d3sc = require('d3-scale-chromatic')
 const CompCol = require('complementary-colors')
-const maxColor = 10
+const maxColor = 7
+const maxInt = Math.pow(2, 32) - 1
 
 // TODO make the scale and the max number of color dynamic
 const scale = d3.scaleSequential(d3sc.interpolatePurples).domain([maxColor, 0])
@@ -178,6 +179,12 @@ conn.onmessage = function (msg) {
 }
 
 function getPath (data) {
+  if (data.length > 0 && data[data.length - 1].point < maxInt) {
+    data.push({
+      id: data[0].id,
+      point: maxInt
+    })
+  }
   return svg.datum(data).selectAll('path')
     .data(pie)
     .enter()
