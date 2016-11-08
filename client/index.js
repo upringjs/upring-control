@@ -185,6 +185,10 @@ function getPath (data) {
       point: maxInt
     })
   }
+  data.unshift({
+    id: data[0].id,
+    point: 0
+  })
   return svg.datum(data).selectAll('path')
     .data(pie)
     .enter()
