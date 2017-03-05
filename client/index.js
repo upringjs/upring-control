@@ -97,11 +97,11 @@ const svg3 = parentSvg.append('g')
 
 const svg = parentSvg
   .append('g')
-  .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
+  .attr('transform', 'translate(' + (width / 2) + ',' + (height / 2) + ')')
 
 const svg2 = parentSvg
   .append('g')
-  .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
+  .attr('transform', 'translate(' + (width / 2) + ',' + (height / 2) + ')')
 
 const arc = d3.arc()
   .innerRadius(innerRadius)
@@ -122,10 +122,10 @@ wr.winResize.on(function (dim) {
     .attr('height', height)
 
   svg.transition('winresize')
-    .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
+    .attr('transform', 'translate(' + (width / 2) + ',' + (height / 2) + ')')
 
   svg2.transition('winresize')
-    .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
+    .attr('transform', 'translate(' + (width / 2) + ',' + (height / 2) + ')')
 
   arc
     .innerRadius(innerRadius)

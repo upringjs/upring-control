@@ -165,7 +165,7 @@ function create (svg, height, main, arc, width, fill) {
   function renderLine (d) {
     const source = {
       x: d.textLength + 10,
-      y: Math.floor(d.y - lineHeight / 2)
+      y: Math.floor(d.y - (lineHeight / 2))
     }
     const dest = d.arcCoord
     const mid = {
